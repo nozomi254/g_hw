@@ -1,6 +1,7 @@
 # coding: UTF-8
 # https://uxmilk.jp/8851
 with open('dictionary.words.html', 'r') as f:
+    # /usr/share/dict/wordsを使うとそんな単語はないよって言われる
   lines = f.readlines()
   d_list = list(lines)
   list1 = []
@@ -50,3 +51,4 @@ for i in range(len(list4)):
 # https://note.nkmk.me/python-dict-value-max-min/
 max_k = max(dic3, key=dic3.get)
 print(max_k)
+#print(dic3)
