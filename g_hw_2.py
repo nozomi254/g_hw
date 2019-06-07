@@ -3,8 +3,6 @@ import numpy, sys, time
 if (len(sys.argv) != 2):
     print("usage: python %s N" % sys.argv[0])
     quit()
-# 入力した引数の個数？が２じゃないとダメなんか?
-# 使い方？引数の１番目　Nって何急に
 
 n = int(sys.argv[1])
 a = numpy.zeros((n, n)) # Matrix A
