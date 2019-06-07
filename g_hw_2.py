@@ -46,7 +46,7 @@ print("time: %.6f sec" % (end - begin))
 total = 0
 for i in range(n):
     for j in range(n):
-        # print c[i, j]
+        print c[i, j]
         total += c[i, j]
 # Print out the sum of all values in C.
 # This should be 450 for N=3, 3680 for N=4, and 18250 for N=5.
