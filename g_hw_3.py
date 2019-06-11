@@ -31,14 +31,6 @@ def readDivided(line, index):
   token = {'type': 'DIVIDED'}
   return token, index + 1
 
-def readPare1(line, index):
-  token = {'type': 'PARE1'}
-  return token, index + 1
-
-def readPare2(line, index):
-  token = {'type': 'PARE2'}
-  return token, index + 1
-
 # 分割して、数字や計算記号を読んだら上のやつに投げる
 # tokensっていうリストを作る
 def tokenize(line): # 字句に分割する
@@ -55,47 +47,26 @@ def tokenize(line): # 字句に分割する
       (token, index) = readMultipled(line, index)
     elif line[index] == '/':
       (token, index) = readDivided(line, index)
-    elif line[index] == '(':
-      (token, index) = readPare1(line, index)
-    elif line[index] == ')':
-      (token, index) = readPare2(line, index)
     else:
       print('Invalid character found: ' + line[index])
       exit(1)
     tokens.append(token)
   return tokens
 
-# ()の中を先に計算する
-def evaluate0(tokens): # 字句の並びを計算する
-  index = 0
-  tokens1 = tokens
-  while index < len(tokens):
-    if tokens[index]['type'] == 'PARE1':
-      pare = tokens[index + 1:tokens.index({'type': 'PARE2'})]
-      pare1 = evaluate1(pare)
-      pareAnswer = evaluate2(pare1)
-      # )の後ろに()内の答えpareAnswerを挿入
-      tokens1.insert(tokens.index({'type': 'PARE2'}) + 1, {'type': 'NUMBER', 'number': pareAnswer})
-      # (から)までを削除
-      del tokens1[index:tokens.index({'type': 'PARE2'}) + 1]
-      # indexを戻す 消したのの終わりから始めを引いて1足したものを引く
-    index += 1
-  return tokens1
-
 # 掛け算と割り算を計算する
-def evaluate1(tokens1): # 字句の並びを計算する
-    tokens2 = tokens1
+def evaluate1(tokens): # 字句の並びを計算する
+    tokens2 = tokens
     index = 0
-    while index < len(tokens1):
-        if tokens1[index]['type'] == 'NUMBER':
-            if tokens1[index - 1]['type'] == 'MULTIPLED':
+    while index < len(tokens):
+        if tokens[index]['type'] == 'NUMBER':
+            if tokens[index - 1]['type'] == 'MULTIPLED':
                 # tokens2の方で、かけたやつをリストの後ろに入れる
-                tokens2.insert(index + 1, {'type': 'NUMBER', 'number': tokens1[index - 2]['number'] * tokens1[index]['number']})
+                tokens2.insert(index + 1, {'type': 'NUMBER', 'number': tokens[index - 2]['number'] * tokens[index]['number']})
                 # tokens2の方で、元のかけ算パートを消す
                 del tokens2[index - 2:index + 1]
                 index -= 2
-            elif tokens1[index - 1]['type'] == 'DIVIDED':
-                tokens2.insert(index + 1, {'type': 'NUMBER', 'number': tokens1[index - 2]['number'] / tokens1[index]['number']})
+            elif tokens[index - 1]['type'] == 'DIVIDED':
+                tokens2.insert(index + 1, {'type': 'NUMBER', 'number': tokens[index - 2]['number'] / tokens[index]['number']})
                 del tokens2[index - 2:index + 1]
                 index -= 2
         index += 1
@@ -121,7 +92,6 @@ def evaluate2(tokens2): # 字句の並びを計算する
 
 def test(line):
   tokens = tokenize(line)
-  tokens1 = evaluate0(tokens)
   tokens2 = evaluate1(tokens)
   actualAnswer = evaluate2(tokens2)
   expectedAnswer = eval(line)
@@ -143,7 +113,6 @@ def runTest():
   test("8*3+4-16/2")
   test("4+6.2*4-9.1+2.2/2")
   test("6+5.5*7/2")
-  test("8*(3+4)-16/2")
   print("==== Test finished! ====\n")
 
 runTest()
@@ -152,9 +121,6 @@ while True:
   print('> ', end="")
   line = input() # 1行読む
   tokens = tokenize(line) # 字句に分割する
-  tokens1 = evaluate0(tokens) # ()を計算する
-  tokens2 = evaluate1(tokens1) # かけ算を計算する
+  tokens2 = evaluate1(tokens) # かけ算を計算する
   answer = evaluate2(tokens2) # 足し算を計算する
   print("answer = %f\n" % answer)
-
-# かけ算まで
