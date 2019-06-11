@@ -54,7 +54,7 @@ def tokenize(line): # 字句に分割する
   return tokens
 
 # 掛け算と割り算を計算する
-def evaluate1(tokens): # 字句の並びを計算する
+def multipled_divided_evaluate(tokens): # 字句の並びを計算する
     tokens2 = tokens
     index = 0
     while index < len(tokens):
@@ -73,7 +73,7 @@ def evaluate1(tokens): # 字句の並びを計算する
     return tokens2
 
 
-def evaluate2(tokens2): # 字句の並びを計算する
+def plus_minus_evaluate(tokens2): # 字句の並びを計算する
   answer = 0
   tokens2.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
   index = 1
@@ -92,8 +92,8 @@ def evaluate2(tokens2): # 字句の並びを計算する
 
 def test(line):
   tokens = tokenize(line)
-  tokens2 = evaluate1(tokens)
-  actualAnswer = evaluate2(tokens2)
+  tokens2 = multipled_divided_evaluate(tokens)
+  actualAnswer = plus_minus_evaluate(tokens2)
   expectedAnswer = eval(line)
   if abs(actualAnswer - expectedAnswer) < 1e-8:
     print("PASS! (%s = %f)" % (line, expectedAnswer))
@@ -121,6 +121,6 @@ while True:
   print('> ', end="")
   line = input() # 1行読む
   tokens = tokenize(line) # 字句に分割する
-  tokens2 = evaluate1(tokens) # かけ算を計算する
-  answer = evaluate2(tokens2) # 足し算を計算する
+  tokens2 = multipled_divided_evaluate(tokens) # かけ算を計算する
+  answer = plus_minus_evaluate(tokens2) # 足し算を計算する
   print("answer = %f\n" % answer)
