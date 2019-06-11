@@ -124,3 +124,5 @@ while True:
   tokens2 = evaluate1(tokens) # かけ算を計算する
   answer = evaluate2(tokens2) # 足し算を計算する
   print("answer = %f\n" % answer)
+
+# かけ算まで
