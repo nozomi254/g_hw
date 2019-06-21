@@ -42,7 +42,13 @@ def nodes_list(link_setsu_list):
 
 # なんとなく深さを優先したい
 # ほぼ適当なサイトのコピペ ありがとうございます
-path_dict = {}
+#path_dict = {}
+def pre_search(goal_name, start_name):
+    goal = get_keys_from_value(nn_dict, goal_name)
+    start_num = get_keys_from_value(nn_dict, start_name)
+    path = [start_num]
+    return goal, path
+
 path_list = []
 def search(goal, path):
     n = path[-1]
@@ -57,20 +63,49 @@ def search(goal, path):
                 path.append(x)
                 search(goal, path)
                 path.pop()
-    return path_list
+    return min(path_list)
 
+def get_keys_from_value(d, val):
+    keys = [k for k, v in d.items() if v == val]
+    if keys:
+        return keys[0]
+    return None
 
-nn_dict = nicknames_dict('nicknames.txt')
-pre_list = links_list('links.txt')
+# SNS
+#file1 = 'nicknames.txt'
+#file2 = 'links.txt'
+
+# Wiki
+file1 = 'wikipedia_links/pages.txt'
+file2 = 'wikipedia_links/links.txt'
+
+#goal_name = 'jacob'
+goal_name = input('goal name: ')
+#start_name = 'marshall'
+start_name = input('start name: ')
+
+nn_dict = nicknames_dict(file1)
+pre_list = links_list(file2)
 link_setsu_list = adjacency_list(pre_list)
+goal, path = pre_search(goal_name, start_name)
+print(search(goal, path))
 #path_dict = search(23,[34])
-path_dict = search(23,[34])
+#min(path_dict) = search(23,[34])
 
 #print(path_dict)
-print(min(path_list)) #最短距離のみを出す
+
 #print(min(path_dict))
-#search(23,[34]) #23:jacobにたどり着くまでの34:marshallからのルートとその長さ
 #print(link_setsu_list)
+
+
+
+ #最短距離のみを出す
+#search(23,[34]) #23:jacobにたどり着くまでの34:marshallからのルートとその長さ
+
+
+
+
+#print(search(23, 34))
 
 '''
 最短(目視&手動w)は
