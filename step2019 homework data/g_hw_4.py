@@ -1,6 +1,7 @@
 # インポートする
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
 
 
 
@@ -43,27 +44,6 @@ def nodes_list(link_setsu_list):
 # なんとなく深さを優先したい
 # ほぼ適当なサイトのコピペ ありがとうございます
 #path_dict = {}
-def pre_search(goal_name, start_name):
-    goal = get_keys_from_value(nn_dict, goal_name)
-    start_num = get_keys_from_value(nn_dict, start_name)
-    path = [start_num]
-    return goal, path
-
-path_list = []
-def search(goal, path):
-    n = path[-1]
-    if n == goal:
-        #print(path)
-        #print(len(path))
-        #path_dict[len(path)] = path
-        path_list.append([len(path)])
-    else:
-        for x in link_setsu_list[n]:
-            if x not in path:
-                path.append(x)
-                search(goal, path)
-                path.pop()
-    return min(path_list)
 
 def get_keys_from_value(d, val):
     keys = [k for k, v in d.items() if v == val]
@@ -71,13 +51,57 @@ def get_keys_from_value(d, val):
         return keys[0]
     return None
 
+
+def pre_search(goal_name, start_name):
+    goal = get_keys_from_value(nn_dict, goal_name)
+    start_num = get_keys_from_value(nn_dict, start_name)
+    path = [start_num]
+    return goal, path
+
+
+path_list = []
+def search(goal, path):
+    n = path[-1]
+    if n == goal:
+        print(path)
+        print(len(path))
+        #path_dict[len(path)] = path
+        #path_list.append([len(path)])
+    else:
+        for x in np.array(link_setsu_list)[n]:
+            if x not in path:
+                path.append(x)
+                search(goal, path)
+                path.pop()
+    #return min(path_list)
+
+'''
+def depthFirstSearch(start, goal):
+    stack = Stack()
+    start.setVisited()
+    stack.push( start )
+    while not stack.empty():
+        node = stack.top()
+        if node == goal:
+            return stack # stack には2頂点間の経路が入っている
+        else:
+            child = node.findUnvisitedChild()
+            if child == none:
+                stack.pop()
+            else:
+                child.setVisited()
+                stack.push( child )
+'''
+
+
 # SNS
-#file1 = 'nicknames.txt'
-#file2 = 'links.txt'
+file1 = 'nicknames.txt'
+file2 = 'links.txt'
+
 
 # Wiki
-file1 = 'wikipedia_links/pages.txt'
-file2 = 'wikipedia_links/links.txt'
+#file1 = 'wikipedia_links/pages.txt'
+#file2 = 'wikipedia_links/links.txt'
 
 #goal_name = 'jacob'
 goal_name = input('goal name: ')
@@ -91,6 +115,7 @@ goal, path = pre_search(goal_name, start_name)
 print(search(goal, path))
 #path_dict = search(23,[34])
 #min(path_dict) = search(23,[34])
+#print(get_keys_from_value(nn_dict, 'ray'))
 
 #print(path_dict)
 
@@ -125,7 +150,9 @@ G.add_nodes_from(nodes)
 # エッジ一覧を追加する。
 G.add_edges_from(edges)
 
-from IPython.display import Image
-A = nx.nx_agraph.to_agraph(G)
-Image(A.draw(format='png', prog='dot'))
+nx.draw_networkx(G)
+plt.show()
 '''
+#from IPython.display import Image
+#A = nx.nx_agraph.to_agraph(G)
+#Image(A.draw(format='png', prog='dot'))
