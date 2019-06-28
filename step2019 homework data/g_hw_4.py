@@ -10,7 +10,7 @@ def nicknames_dict(file1):
     with open(file1, 'r') as nn:
         nn_dict = {}
         for line in nn:
-            #nn_list.append(line.split('\t', '\n')) ←めんどいだるいできない
+            #nn_list.append(line.split('\t', '\n'))
             num, nickname = line.split()
             nn_dict[int(num)] = nickname
     return nn_dict
@@ -23,16 +23,19 @@ def links_list(file2):
             pre_list.append([int(num1), int(num2)])
     return pre_list
 
-# 隣接リストにするぞ
-def adjacency_list(pre_list):
-    link_setsu_list = [] # ダサい
-    for i in range(49):
-        follower_list = []
-        link_setsu_list.append(follower_list)
-        for j in pre_list:
-            if j[0] == i:
-                follower_list.append(j[1])
-    return link_setsu_list
+# 隣接リストにするぞ→やめて、辞書にする
+def adjacency_dict(pre_list):
+    rinsetsu = {} # 元 Link_setsu_list
+    for a, b in pre_list:
+        if a not in rinsetsu:
+            rinsetsu[a] = []
+            rinsetsu[a].append(b)
+        if a>0 and a-1 not in rinsetsu:
+            rinsetsu[a-1] = []
+        else:
+            rinsetsu[a].append(b)
+
+    return rinsetsu
 
 # グラフの画像を作りたい
 def nodes_list(link_setsu_list):
@@ -63,17 +66,17 @@ path_list = []
 def search(goal, path):
     n = path[-1]
     if n == goal:
-        print(path)
-        print(len(path))
+        #print(path)
+        #print(len(path))
         #path_dict[len(path)] = path
-        #path_list.append([len(path)])
+        path_list.append([len(path)])
     else:
-        for x in np.array(link_setsu_list)[n]:
+        for x in rinsetsu[n]:
             if x not in path:
                 path.append(x)
                 search(goal, path)
                 path.pop()
-    #return min(path_list)
+    return min(path_list)
 
 '''
 def depthFirstSearch(start, goal):
@@ -110,27 +113,16 @@ start_name = input('start name: ')
 
 nn_dict = nicknames_dict(file1)
 pre_list = links_list(file2)
-link_setsu_list = adjacency_list(pre_list)
+rinsetsu = adjacency_dict(pre_list)
+#print(rinsetsu)
 goal, path = pre_search(goal_name, start_name)
 print(search(goal, path))
-#path_dict = search(23,[34])
 #min(path_dict) = search(23,[34])
 #print(get_keys_from_value(nn_dict, 'ray'))
 
 #print(path_dict)
 
 #print(min(path_dict))
-#print(link_setsu_list)
-
-
-
- #最短距離のみを出す
-#search(23,[34]) #23:jacobにたどり着くまでの34:marshallからのルートとその長さ
-
-
-
-
-#print(search(23, 34))
 
 '''
 最短(目視&手動w)は
